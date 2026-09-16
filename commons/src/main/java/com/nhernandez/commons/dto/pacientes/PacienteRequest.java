@@ -1,4 +1,4 @@
-package com.nhernandez.pacientes.dto;
+package com.nhernandez.commons.dto.pacientes;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMax;

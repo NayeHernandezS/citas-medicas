@@ -1,11 +1,10 @@
 package com.nhernandez.pacientes.controller;
 
-import com.nhernandez.pacientes.dto.PacienteRequest;
+import com.nhernandez.commons.dto.pacientes.PacienteRequest;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 import com.nhernandez.pacientes.service.paciente.PacienteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -37,27 +35,27 @@ public class PacienteController {
     }
 
     @GetMapping("/sinValidarEstado")
-    public ResponseEntity<List<PacienteResponse>> listarSinValidarEstado() {
+    public ResponseEntity<List<com.nhernandez.pacientes.dto.PacienteResponse>> listarSinValidarEstado() {
         return ResponseEntity.ok(pacienteService.listarSinValidarEstado());
     }
 
     @GetMapping("/sinValidarEstado/{id}")
-    public ResponseEntity<PacienteResponse> obtenerSinValidarEstado(@PathVariable Long id) {
+    public ResponseEntity<com.nhernandez.pacientes.dto.PacienteResponse> obtenerSinValidarEstado(@PathVariable Long id) {
         return ResponseEntity.ok(pacienteService.obtenerSinValidarEstado(id));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PacienteResponse> obtener(@PathVariable Long id) {
+    public ResponseEntity<com.nhernandez.pacientes.dto.PacienteResponse> obtener(@PathVariable Long id) {
         return ResponseEntity.ok(pacienteService.obtener(id));
     }
 
     @PostMapping
-    public ResponseEntity<PacienteResponse> registrar(@Valid @RequestBody PacienteRequest request) {
+    public ResponseEntity<com.nhernandez.pacientes.dto.PacienteResponse> registrar(@Valid @RequestBody PacienteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pacienteService.registrar(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PacienteResponse> actualizar(
+    public ResponseEntity<com.nhernandez.pacientes.dto.PacienteResponse> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody PacienteRequest request
     ) {
@@ -65,7 +63,7 @@ public class PacienteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<PacienteResponse> eliminar(@PathVariable Long id) {
+    public ResponseEntity<com.nhernandez.pacientes.dto.PacienteResponse> eliminar(@PathVariable Long id) {
         return ResponseEntity.ok(pacienteService.eliminar(id));
     }
 }

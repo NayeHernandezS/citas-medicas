@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.service.paciente;
 
-import com.nhernandez.pacientes.dto.PacienteRequest;
+import com.nhernandez.commons.dto.pacientes.PacienteRequest;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 
 import java.util.List;

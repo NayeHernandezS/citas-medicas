@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.mappers;
 
-import com.nhernandez.pacientes.dto.PacienteRequest;
+import com.nhernandez.commons.dto.pacientes.PacienteRequest;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 import com.nhernandez.pacientes.enums.EstadoPaciente;
 import com.nhernandez.pacientes.entities.Paciente;

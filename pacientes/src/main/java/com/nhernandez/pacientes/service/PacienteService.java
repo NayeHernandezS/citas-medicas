@@ -1,4 +1,4 @@
-package com.nhernandez.pacientes.service.paciente;
+package com.nhernandez.pacientes.service;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
 import com.nhernandez.pacientes.dto.PacienteResponse;

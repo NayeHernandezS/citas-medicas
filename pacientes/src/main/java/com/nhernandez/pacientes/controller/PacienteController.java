@@ -2,7 +2,7 @@ package com.nhernandez.pacientes.controller;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
 import com.nhernandez.pacientes.dto.PacienteResponse;
-import com.nhernandez.pacientes.service.paciente.PacienteService;
+import com.nhernandez.pacientes.service.PacienteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

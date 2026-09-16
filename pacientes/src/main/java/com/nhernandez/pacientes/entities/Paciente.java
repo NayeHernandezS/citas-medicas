@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.entities;
 
-import com.nhernandez.pacientes.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -1,8 +1,8 @@
-package com.nhernandez.pacientes.service.paciente;
+package com.nhernandez.pacientes.service;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.pacientes.dto.PacienteResponse;
-import com.nhernandez.pacientes.enums.EstadoPaciente;
 import com.nhernandez.pacientes.entities.Paciente;
 import com.nhernandez.pacientes.mappers.PacienteMapper;
 import com.nhernandez.pacientes.repositories.PacienteRepository;

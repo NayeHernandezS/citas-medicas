@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.repositories;
 
-import com.nhernandez.pacientes.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.pacientes.entities.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,4 +22,5 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     boolean existsByTelefono(String telefono);
 
     boolean existsByTelefonoAndIdNot(String telefono, Long id);
+
 }

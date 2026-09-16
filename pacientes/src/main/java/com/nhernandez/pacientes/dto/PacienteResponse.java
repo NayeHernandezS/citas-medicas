@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.dto;
 
-import com.nhernandez.pacientes.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record PacienteResponse(

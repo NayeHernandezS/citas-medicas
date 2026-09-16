@@ -50,6 +50,7 @@ public class CitaServiceImpl implements CitaService {
     @Override
     @Transactional(readOnly = true)
     public CitaResponse obtenerPorIdSinEstado(Long id) {
+        log.info("Obteniendo de citas sin estado activas solicitado");
         Cita cita = citaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la cita: " + id));
         return aCitaResponse(cita);
@@ -57,7 +58,7 @@ public class CitaServiceImpl implements CitaService {
 
     @Override
     public CitaResponse registrar(CitaRequest request) {
-        log.info("Registrando cita para paciente {} con médico {}", request.idPaciente(), request.idMedico());
+        log.info("Registrando cita para paciente");
         PacienteResponse paciente = obtenerPacienteActivo(request.idPaciente());
         validarPacienteSinCitaActiva(request.idPaciente(), null);
         MedicoResponse medico = validarMedicoActivoDisponible(request.idMedico());

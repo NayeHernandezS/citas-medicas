@@ -5,8 +5,8 @@ import com.nhernandez.commons.dto.medicos.MedicoResponse;
 import com.nhernandez.commons.dto.pacientes.DatosPaciente;
 import com.nhernandez.commons.dto.pacientes.PacienteResponse;
 import com.nhernandez.commons.mappers.CommonMapper;
-import com.nhernandez.msv.citas.dto.CitaRequest;
-import com.nhernandez.msv.citas.dto.CitaResponse;
+import com.nhernandez.commons.dto.citas.CitaRequest;
+import com.nhernandez.commons.dto.citas.CitaResponse;
 import com.nhernandez.msv.citas.entity.Cita;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
-package com.nhernandez.msv.citas.dto;
+package com.nhernandez.commons.dto.citas;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nhernandez.commons.dto.medicos.DatosMedico;
 import com.nhernandez.commons.dto.pacientes.DatosPaciente;
 import com.nhernandez.commons.enums.EstadoPaciente;
-import com.nhernandez.msv.citas.enums.EstadoCita;
+import com.nhernandez.commons.enums.EstadoCita;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;

@@ -3,7 +3,7 @@ package com.nhernandez.msv.citas.entity;
 import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.commons.utils.StringCustomUtils;
 import com.nhernandez.commons.utils.ValoresNumericosUtils;
-import com.nhernandez.msv.citas.enums.EstadoCita;
+import com.nhernandez.commons.enums.EstadoCita;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -80,7 +80,8 @@ public class Cita {
         validarNoEliminada();
 
         if (!estadoCita.isEliminable())
-            throw new IllegalStateException("La cita con estado" + estadoCita + "No puede eliminarse");
+            throw new IllegalStateException(
+                    "La cita con estado " + estadoCita + " no puede eliminarse");
     }
 
     private void validarActualizacionPermitida(){
@@ -103,7 +104,7 @@ public class Cita {
     }
 
     public void eliminar() {
-        validarNoEliminada();
+        validarEliminacionPermitida();
         this.estadoRegistro = EstadoPaciente.ELIMINADO;
         this.estadoCita = EstadoCita.CANCELADA;
     }

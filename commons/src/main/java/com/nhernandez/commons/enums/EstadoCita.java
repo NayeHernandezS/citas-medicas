@@ -1,6 +1,5 @@
-package com.nhernandez.msv.citas.enums;
+package com.nhernandez.commons.enums;
 
-import com.nhernandez.commons.enums.DisponibilidadMedico;
 import com.nhernandez.commons.exceptions.RecursoNoEncontradoException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public enum EstadoCita {
 
-    PENDIENTE(1L, "Pendiente de firmar", true, false){
+    PENDIENTE(1L, "Pendiente de firmar", true, true){
 
         @Override
         public Set<EstadoCita> puedeCambiar() {
@@ -28,7 +27,7 @@ public enum EstadoCita {
         }
     },
 
-    EN_CURSO(3L, "Paciente llego a su cita",true, false){
+    EN_CURSO(3L, "Paciente llego a su cita", false, false){
         @Override
         public Set<EstadoCita> puedeCambiar() {
             return EnumSet.of(FINALIZADA);

@@ -2,7 +2,7 @@ package com.nhernandez.msv.citas.repository;
 
 import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.msv.citas.entity.Cita;
-import com.nhernandez.msv.citas.enums.EstadoCita;
+import com.nhernandez.commons.enums.EstadoCita;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Collection;
@@ -20,4 +20,7 @@ public interface CitaRepository extends JpaRepository<Cita, Long> {
 
     boolean existsByIdPacienteAndEstadoRegistroAndEstadoCitaInAndIdNot(
             Long idPaciente, EstadoPaciente estadoRegistro, Collection<EstadoCita> estadosCita, Long id);
+
+    boolean existsByIdMedicoAndEstadoRegistroAndEstadoCitaIn(
+            Long idMedico, EstadoPaciente estadoRegistro, Collection<EstadoCita> estadosCita);
 }

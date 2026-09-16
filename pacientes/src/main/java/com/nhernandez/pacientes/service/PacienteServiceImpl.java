@@ -45,7 +45,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Transactional(readOnly = true)
     public PacienteResponse obtener(Long id) {
         Paciente paciente = pacienteRepository.findByIdAndEstadoNot(id, EstadoPaciente.ELIMINADO)
-                .orElseThrow(() -> new NoSuchElementException("No se encontró el paciente: " + id));
+                .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
         return pacienteMapper.entidadResponse(paciente);
     }
 
@@ -53,13 +53,13 @@ public class PacienteServiceImpl implements PacienteService {
     @Transactional(readOnly = true)
     public PacienteResponse obtenerSinValidarEstado(Long id) {
         Paciente paciente = pacienteRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("No se encontró el paciente: " + id));
+                .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
         return pacienteMapper.entidadResponse(paciente);
     }
 
     @Override
     public PacienteResponse registrar(PacienteRequest request) {
-        log.info("Registrando paciente con teléfono {}", request.telefono());
+        log.info("Registrando paciente con telefono {}", request.telefono());
         validarTelefonoUnico(request.telefono(), null);
         Paciente paciente = pacienteMapper.requestToEntity(request);
         paciente = pacienteRepository.save(paciente);
@@ -83,7 +83,7 @@ public class PacienteServiceImpl implements PacienteService {
 
     private Paciente obtenerActivo(Long id) {
         return pacienteRepository.findByIdAndEstadoNot(id, EstadoPaciente.ELIMINADO)
-                .orElseThrow(() -> new NoSuchElementException("No se encontró el paciente: " + id));
+                .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
     }
 
     private void validarTelefonoUnico(String telefono, Long idActual) {
@@ -91,7 +91,7 @@ public class PacienteServiceImpl implements PacienteService {
                 ? pacienteRepository.existsByTelefono(telefono)
                 : pacienteRepository.existsByTelefonoAndIdNot(telefono, idActual);
         if (telefonoDuplicado) {
-            throw new IllegalArgumentException("Ya existe un paciente registrado con el teléfono " + telefono);
+            throw new IllegalArgumentException("Ya existe un paciente registrado con el telefono " + telefono);
         }
     }
 }

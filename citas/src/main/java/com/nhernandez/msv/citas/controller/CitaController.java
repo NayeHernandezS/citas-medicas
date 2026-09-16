@@ -1,8 +1,8 @@
 package com.nhernandez.msv.citas.controller;
 
 import com.nhernandez.commons.controller.CrudController;
-import com.nhernandez.msv.citas.dto.CitaRequest;
-import com.nhernandez.msv.citas.dto.CitaResponse;
+import com.nhernandez.commons.dto.citas.CitaRequest;
+import com.nhernandez.commons.dto.citas.CitaResponse;
 import com.nhernandez.msv.citas.service.CitaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Validated
-@Tag(name = "API Citas", description = "Métodos para la gestión de citas")
+@Tag(name = "API Citas", description = "Metodos para la gestión de citas")
 public class CitaController extends CrudController<CitaRequest, CitaResponse, CitaService> {
     public CitaController(CitaService service) {
         super(service);

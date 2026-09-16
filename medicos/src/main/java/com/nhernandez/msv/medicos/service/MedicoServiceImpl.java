@@ -28,7 +28,7 @@ public class MedicoServiceImpl implements MedicoService {
     @Override
     @Transactional(readOnly = true)
     public List<MedicoResponse> listar() {
-        log.info("Listado de médicos activos solicitado");
+        log.info("Listado de medicos activos solicitado");
         return medicoRepository.findByEstadoRegistro(EstadoPaciente.ACTIVO).stream()
                 .map(medicoMapper::entidadResponse)
                 .toList();
@@ -44,13 +44,13 @@ public class MedicoServiceImpl implements MedicoService {
     @Transactional(readOnly = true)
     public MedicoResponse obtenerMedicoPorIdSinEstado(Long id) {
         Medico medico = medicoRepository.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el médico: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el medico: " + id));
         return medicoMapper.entidadResponse(medico);
     }
 
     @Override
     public MedicoResponse registrar(MedicoRequest request) {
-        log.info("Registrando médico con cédula {}", request.cedulaProfesional());
+        log.info("Registrando medico con cedula {}", request.cedulaProfesional());
         validarDatosUnicos(request, null);
         Medico medico = medicoMapper.requestEntidad(request);
         return medicoMapper.entidadResponse(medicoRepository.save(medico));
@@ -58,7 +58,7 @@ public class MedicoServiceImpl implements MedicoService {
 
     @Override
     public MedicoResponse actualizar(MedicoRequest request, Long id) {
-        log.info("Actualizando médico {}", id);
+        log.info("Actualizando medico {}", id);
         Medico medico = obtenerActivo(id);
         validarDatosUnicos(request, id);
         medico.actualizar(

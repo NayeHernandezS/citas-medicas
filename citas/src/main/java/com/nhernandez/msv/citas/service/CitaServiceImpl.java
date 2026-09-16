@@ -7,10 +7,10 @@ import com.nhernandez.commons.enums.DisponibilidadMedico;
 import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.commons.exceptions.RecursoNoEncontradoException;
 import com.nhernandez.commons.client.PacientesClient;
-import com.nhernandez.msv.citas.dto.CitaRequest;
-import com.nhernandez.msv.citas.dto.CitaResponse;
+import com.nhernandez.commons.dto.citas.CitaRequest;
+import com.nhernandez.commons.dto.citas.CitaResponse;
 import com.nhernandez.msv.citas.entity.Cita;
-import com.nhernandez.msv.citas.enums.EstadoCita;
+import com.nhernandez.commons.enums.EstadoCita;
 import com.nhernandez.msv.citas.mapper.CitaMapper;
 import com.nhernandez.msv.citas.repository.CitaRepository;
 import feign.FeignException;
@@ -86,11 +86,23 @@ public class CitaServiceImpl implements CitaService {
     public CitaResponse actualizar(CitaRequest request, Long id) {
         log.info("Actualizando cita {}", id);
         Cita cita = obtenerActiva(id);
+        Long medicoAnterior = cita.getIdMedico();
+        boolean cambiaMedico = !medicoAnterior.equals(request.idMedico());
+
         obtenerPacienteActivo(request.idPaciente());
         validarPacienteSinCitaActiva(request.idPaciente(), id);
-        validarMedicoActivoDisponible(request.idMedico());
+        if (cambiaMedico) {
+            validarMedicoActivoDisponible(request.idMedico());
+        }
+
         cita.actualizar(request.idPaciente(), request.idMedico(), request.fechaCita(), request.sintomas());
-        return aCitaResponse(citaRepository.save(cita));
+        citaRepository.save(cita);
+
+        if (cambiaMedico) {
+            liberarMedicoSiNoTieneCitasActivas(medicoAnterior);
+            cambiarDisponibilidadMedicoSegunEstadoCita(request.idMedico(), cita.getEstadoCita());
+        }
+        return aCitaResponse(cita);
     }
 
     @Override
@@ -138,26 +150,46 @@ public class CitaServiceImpl implements CitaService {
         try {
             return pacientesClient.obtenerPacienteActivoPorId(idPaciente);
         } catch (FeignException.NotFound e) {
-            throw new RecursoNoEncontradoException("No se encontró el paciente activo: " + idPaciente);
+            throw new RecursoNoEncontradoException("No se encontro el paciente activo: " + idPaciente);
         }
     }
 
     private Cita obtenerActiva(Long id) {
         return citaRepository.findByIdAndEstadoRegistro(id, EstadoPaciente.ACTIVO)
-                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la cita: " + id));
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se encontro la cita: " + id));
     }
 
     private void cambiarDisponibilidadMedicoSegunEstadoCita(Long idMedico, EstadoCita estadoCita) {
+        Long codigoDisponibilidad = estadoCita.codigoDisponibilidadMedico();
+        if (DisponibilidadMedico.DISPONIBLE.getCodigo().equals(codigoDisponibilidad)
+                && medicoTieneCitasActivas(idMedico)) {
+            log.info("El medico {} no pasa a DISPONIBLE porque aun tiene citas activas", idMedico);
+            return;
+        }
+        medicoClient.actualizarDisponibilidadMedico(idMedico, codigoDisponibilidad);
+    }
+
+    private void liberarMedicoSiNoTieneCitasActivas(Long idMedico) {
+        if (medicoTieneCitasActivas(idMedico)) {
+            log.info("El medico {} no se libera; aun tiene citas PENDIENTE, CONFIRMADA o EN_CURSO", idMedico);
+            return;
+        }
         medicoClient.actualizarDisponibilidadMedico(
+                idMedico, DisponibilidadMedico.DISPONIBLE.getCodigo());
+    }
+
+    private boolean medicoTieneCitasActivas(Long idMedico) {
+        return citaRepository.existsByIdMedicoAndEstadoRegistroAndEstadoCitaIn(
                 idMedico,
-                estadoCita.codigoDisponibilidadMedico());
+                EstadoPaciente.ACTIVO,
+                List.of(EstadoCita.PENDIENTE, EstadoCita.CONFIRMADA, EstadoCita.EN_CURSO));
     }
 
     private MedicoResponse obtenerMedicoActivo(Long idMedico) {
         try {
             return medicoClient.obtenerMedicoActivoPorId(idMedico);
         } catch (FeignException.NotFound e) {
-            throw new RecursoNoEncontradoException("No se encontró el médico activo: " + idMedico);
+            throw new RecursoNoEncontradoException("No se encontro el medico activo: " + idMedico);
         }
     }
 
@@ -165,7 +197,7 @@ public class CitaServiceImpl implements CitaService {
         try {
             return medicoClient.obtenerMedicoSinEstadoPorId(idMedico);
         } catch (FeignException.NotFound e) {
-            throw new RecursoNoEncontradoException("No se encontró el médico: " + idMedico);
+            throw new RecursoNoEncontradoException("No se encontro el medico: " + idMedico);
         }
     }
 }

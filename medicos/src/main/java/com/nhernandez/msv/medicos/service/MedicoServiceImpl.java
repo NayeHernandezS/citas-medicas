@@ -4,7 +4,7 @@ import com.nhernandez.commons.dto.medicos.MedicoRequest;
 import com.nhernandez.commons.dto.medicos.MedicoResponse;
 import com.nhernandez.commons.enums.DisponibilidadMedico;
 import com.nhernandez.commons.enums.EspecialidadMedico;
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.commons.exceptions.RecursoNoEncontradoException;
 import com.nhernandez.msv.medicos.entity.Medico;
 import com.nhernandez.msv.medicos.mapper.MedicoMapper;
@@ -29,7 +29,7 @@ public class MedicoServiceImpl implements MedicoService {
     @Transactional(readOnly = true)
     public List<MedicoResponse> listar() {
         log.info("Listado de medicos activos solicitado");
-        return medicoRepository.findByEstadoRegistro(EstadoPaciente.ACTIVO).stream()
+        return medicoRepository.findByEstadoRegistro(EstadoRegistro.ACTIVO).stream()
                 .map(medicoMapper::entidadResponse)
                 .toList();
     }
@@ -91,28 +91,28 @@ public class MedicoServiceImpl implements MedicoService {
     }
 
     private Medico obtenerActivo(Long id) {
-        return medicoRepository.findByIdAndEstadoRegistro(id, EstadoPaciente.ACTIVO)
+        return medicoRepository.findByIdAndEstadoRegistro(id, EstadoRegistro.ACTIVO)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró el médico: " + id));
     }
 
     private void validarDatosUnicos(MedicoRequest request, Long idActual) {
         boolean emailDuplicado = idActual == null
-                ? medicoRepository.existsByEmailIgnoreCaseAndEstadoRegistro(request.email(), EstadoPaciente.ACTIVO)
-                : medicoRepository.existsByEmailIgnoreCaseAndEstadoRegistroAndIdNot(request.email(), EstadoPaciente.ACTIVO, idActual);
+                ? medicoRepository.existsByEmailIgnoreCaseAndEstadoRegistro(request.email(), EstadoRegistro.ACTIVO)
+                : medicoRepository.existsByEmailIgnoreCaseAndEstadoRegistroAndIdNot(request.email(), EstadoRegistro.ACTIVO, idActual);
         if (emailDuplicado) {
             throw new IllegalArgumentException("Ya existe un médico registrado con el email " + request.email());
         }
 
         boolean telefonoDuplicado = idActual == null
-                ? medicoRepository.existsByTelefonoAndEstadoRegistro(request.telefono(), EstadoPaciente.ACTIVO)
-                : medicoRepository.existsByTelefonoAndEstadoRegistroAndIdNot(request.telefono(), EstadoPaciente.ACTIVO, idActual);
+                ? medicoRepository.existsByTelefonoAndEstadoRegistro(request.telefono(), EstadoRegistro.ACTIVO)
+                : medicoRepository.existsByTelefonoAndEstadoRegistroAndIdNot(request.telefono(), EstadoRegistro.ACTIVO, idActual);
         if (telefonoDuplicado) {
             throw new IllegalArgumentException("Ya existe un médico registrado con el teléfono " + request.telefono());
         }
 
         boolean cedulaDuplicada = idActual == null
-                ? medicoRepository.existsByCedulaProfesionalIgnoreCaseAndEstadoRegistro(request.cedulaProfesional(), EstadoPaciente.ACTIVO)
-                : medicoRepository.existsByCedulaProfesionalIgnoreCaseAndEstadoRegistroAndIdNot(request.cedulaProfesional(), EstadoPaciente.ACTIVO, idActual);
+                ? medicoRepository.existsByCedulaProfesionalIgnoreCaseAndEstadoRegistro(request.cedulaProfesional(), EstadoRegistro.ACTIVO)
+                : medicoRepository.existsByCedulaProfesionalIgnoreCaseAndEstadoRegistroAndIdNot(request.cedulaProfesional(), EstadoRegistro.ACTIVO, idActual);
         if (cedulaDuplicada) {
             throw new IllegalArgumentException("Ya existe un médico registrado con la cédula " + request.cedulaProfesional());
         }

@@ -3,7 +3,7 @@ package com.nhernandez.commons.dto.citas;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nhernandez.commons.dto.medicos.DatosMedico;
 import com.nhernandez.commons.dto.pacientes.DatosPaciente;
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.commons.enums.EstadoCita;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -24,7 +24,7 @@ public record CitaResponse(
         EstadoCita estadoCita,
 
         @Schema(description = "Estado de registro del paciente", example = "ACTIVO")
-        EstadoPaciente estadoRegistro,
+        EstadoRegistro estadoRegistro,
 
         @Schema(description = "Datos del paciente", example = "Nayely Hernandez, 29 años, naye@gmail.com")
         DatosPaciente paciente,

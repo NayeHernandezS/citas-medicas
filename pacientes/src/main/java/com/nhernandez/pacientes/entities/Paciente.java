@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.entities;
 
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -62,6 +62,6 @@ public class Paciente {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_REGISTRO", nullable = false, length = 20)
-    private EstadoPaciente estado;
+    private EstadoRegistro estado;
 
 }

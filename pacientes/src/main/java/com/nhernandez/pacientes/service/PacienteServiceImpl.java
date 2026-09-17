@@ -1,7 +1,7 @@
 package com.nhernandez.pacientes.service;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 import com.nhernandez.pacientes.entities.Paciente;
 import com.nhernandez.pacientes.mappers.PacienteMapper;
@@ -27,7 +27,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Transactional(readOnly = true)
     public List<PacienteResponse> listar() {
         log.info("Listado de pacientes activos solicitado");
-        return pacienteRepository.findByEstadoNot(EstadoPaciente.ELIMINADO).stream()
+        return pacienteRepository.findByEstadoNot(EstadoRegistro.ELIMINADO).stream()
                 .map(pacienteMapper::entidadResponse)
                 .toList();
     }
@@ -44,7 +44,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     @Transactional(readOnly = true)
     public PacienteResponse obtener(Long id) {
-        Paciente paciente = pacienteRepository.findByIdAndEstadoNot(id, EstadoPaciente.ELIMINADO)
+        Paciente paciente = pacienteRepository.findByIdAndEstadoNot(id, EstadoRegistro.ELIMINADO)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
         return pacienteMapper.entidadResponse(paciente);
     }
@@ -77,12 +77,12 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     public PacienteResponse eliminar(Long id) {
         Paciente paciente = obtenerActivo(id);
-        paciente.setEstado(EstadoPaciente.ELIMINADO);
+        paciente.setEstado(EstadoRegistro.ELIMINADO);
         return pacienteMapper.entidadResponse(pacienteRepository.save(paciente));
     }
 
     private Paciente obtenerActivo(Long id) {
-        return pacienteRepository.findByIdAndEstadoNot(id, EstadoPaciente.ELIMINADO)
+        return pacienteRepository.findByIdAndEstadoNot(id, EstadoRegistro.ELIMINADO)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
     }
 

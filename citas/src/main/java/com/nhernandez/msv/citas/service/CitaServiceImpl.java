@@ -37,14 +37,21 @@ public class CitaServiceImpl implements CitaService {
     public List<CitaResponse> listar() {
         log.info("Listado de citas activas solicitado");
         return citaRepository.findByEstadoRegistro(EstadoRegistro.ACTIVO).stream()
-                .map(this::aCitaResponse)
+                .map(cita -> citaMapper.entidadResponse(
+                        cita,
+                        obtenerPacienteActivo(cita.getIdPaciente()),
+                        obtenerMedicoSinEstado(cita.getIdMedico())))
                 .toList();
     }
 
     @Override
     @Transactional(readOnly = true)
     public CitaResponse obtenerPorId(Long id) {
-        return aCitaResponse(obtenerActiva(id));
+        Cita cita = obtenerActiva(id);
+        return citaMapper.entidadResponse(
+                cita,
+                obtenerPacienteActivo(cita.getIdPaciente()),
+                obtenerMedicoSinEstado(cita.getIdMedico()));
     }
 
     @Override
@@ -53,7 +60,10 @@ public class CitaServiceImpl implements CitaService {
         log.info("Obteniendo de citas sin estado activas solicitado");
         Cita cita = citaRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("No se encontró la cita: " + id));
-        return aCitaResponse(cita);
+        return citaMapper.entidadResponse(
+                cita,
+                obtenerPacienteActivo(cita.getIdPaciente()),
+                obtenerMedicoSinEstado(cita.getIdMedico()));
     }
 
     @Override
@@ -87,28 +97,23 @@ public class CitaServiceImpl implements CitaService {
     public CitaResponse actualizar(CitaRequest request, Long id) {
         log.info("Actualizando cita {}", id);
         Cita cita = obtenerActiva(id);
-        if (cita.getEstadoCita() != EstadoCita.PENDIENTE
-                && cita.getEstadoCita() != EstadoCita.CONFIRMADA) {
-            throw new IllegalStateException(
-                    "Solo se puede actualizar la cita si está en PENDIENTE o CONFIRMADA");
-        }
         Long medicoAnterior = cita.getIdMedico();
         boolean cambiaMedico = !medicoAnterior.equals(request.idMedico());
 
-        obtenerPacienteActivo(request.idPaciente());
+        PacienteResponse paciente = obtenerPacienteActivo(request.idPaciente());
         validarPacienteSinCitaActiva(request.idPaciente(), id);
-        if (cambiaMedico) {
-            validarMedicoActivoDisponible(request.idMedico());
-        }
+        MedicoResponse medico = cambiaMedico
+                ? validarMedicoActivoDisponible(request.idMedico())
+                : obtenerMedicoSinEstado(medicoAnterior);
 
         cita.actualizar(request.idPaciente(), request.idMedico(), request.fechaCita(), request.sintomas());
         citaRepository.save(cita);
 
         if (cambiaMedico) {
             liberarMedicoSiNoTieneCitasActivas(medicoAnterior);
-            cambiarDisponibilidadMedicoSegunEstadoCita(request.idMedico(), cita.getEstadoCita());
+            cambiarDisponibilidadMedicoSegunEstadoCita(medico.id(), cita.getEstadoCita());
         }
-        return aCitaResponse(cita);
+        return citaMapper.entidadResponse(cita, paciente, medico);
     }
 
     @Override
@@ -133,14 +138,6 @@ public class CitaServiceImpl implements CitaService {
         cita.actualizarEstado(nuevoEstado);
         citaRepository.save(cita);
         cambiarDisponibilidadMedicoSegunEstadoCita(cita.getIdMedico(), nuevoEstado);
-    }
-
-    private CitaResponse aCitaResponse(Cita cita) {
-        return citaMapper.entidadResponse(
-                cita,
-                obtenerPacienteActivo(cita.getIdPaciente()),
-                obtenerMedicoSinEstado(cita.getIdMedico())
-        );
     }
 
     private void validarPacienteSinCitaActiva(Long idPaciente, Long idCitaActual) {

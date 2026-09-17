@@ -20,7 +20,7 @@ public record PacienteResponse(
         @Schema(description = "Edad del paciente", example = "29")
         Integer edad,
 
-        @Schema(description = "Peso en kg del paciente", example = "60kg")
+        @Schema(description = "Peso en kg del paciente", example = "60")
         Double peso,
 
         @Schema(description = "Estatura del paciente", example = "1.60")

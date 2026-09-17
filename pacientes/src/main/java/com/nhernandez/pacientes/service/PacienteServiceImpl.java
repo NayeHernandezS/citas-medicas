@@ -63,6 +63,7 @@ public class PacienteServiceImpl implements PacienteService {
     public PacienteResponse registrar(PacienteRequest request) {
         log.info("Registrando paciente con telefono {}", request.telefono());
         validarTelefonoUnico(request.telefono(), null);
+        validarEmailUnico(request.email(), null);
         Paciente paciente = pacienteMapper.requestToEntity(request);
         paciente = pacienteRepository.save(paciente);
         return pacienteMapper.entidadResponse(paciente);
@@ -74,6 +75,7 @@ public class PacienteServiceImpl implements PacienteService {
         log.info("Actualizando paciente");
         Paciente paciente = obtenerActivo(id);
         validarTelefonoUnico(request.telefono(), id);
+        validarEmailUnico(request.email(), id);
         pacienteMapper.actualizarEntidad(paciente, request);
         return pacienteMapper.entidadResponse(pacienteRepository.save(paciente));
     }
@@ -99,6 +101,16 @@ public class PacienteServiceImpl implements PacienteService {
                 : pacienteRepository.existsByTelefonoAndIdNot(telefono, idActual);
         if (telefonoDuplicado) {
             throw new IllegalArgumentException("Ya existe un paciente registrado con el telefono " + telefono);
+        }
+    }
+
+    private void validarEmailUnico(String email, Long idActual) {
+        log.info("Validando el correo unico");
+        boolean emailDuplicado = idActual == null
+                ? pacienteRepository.existsByEmailIgnoreCase(email)
+                : pacienteRepository.existsByEmailIgnoreCaseAndIdNot(email, idActual);
+        if (emailDuplicado) {
+            throw new IllegalArgumentException("Ya existe un paciente registrado con el correo " + email);
         }
     }
 }

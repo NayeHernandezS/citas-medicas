@@ -4,7 +4,7 @@ import com.nhernandez.commons.dto.medicos.MedicoRequest;
 import com.nhernandez.commons.dto.medicos.MedicoResponse;
 import com.nhernandez.commons.enums.DisponibilidadMedico;
 import com.nhernandez.commons.enums.EspecialidadMedico;
-import com.nhernandez.commons.enums.EstadoRegistro;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.commons.mappers.CommonMapper;
 import com.nhernandez.msv.medicos.entity.Medico;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class MedicoMapper implements CommonMapper<MedicoRequest, MedicoResponse,
                 .cedulaProfesional(request.cedulaProfesional().trim())
                 .especialidadMedico(especialidad)
                 .disponibilidadMedico(DisponibilidadMedico.DISPONIBLE)
-                .estadoRegistro(EstadoRegistro.ACTIVO)
+                .estadoRegistro(EstadoPaciente.ACTIVO)
                 .build();
     }
 

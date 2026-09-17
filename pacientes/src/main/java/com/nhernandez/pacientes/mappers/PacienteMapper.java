@@ -1,7 +1,7 @@
 package com.nhernandez.pacientes.mappers;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
-import com.nhernandez.commons.enums.EstadoRegistro;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 import com.nhernandez.pacientes.entities.Paciente;
 import com.nhernandez.pacientes.util.PacienteReglas;
@@ -37,7 +37,7 @@ public class PacienteMapper {
         }
         Paciente paciente = new Paciente();
         aplicarDatos(paciente, request);
-        paciente.setEstado(EstadoRegistro.ACTIVO);
+        paciente.setEstado(EstadoPaciente.ACTIVO);
         return paciente;
     }
 

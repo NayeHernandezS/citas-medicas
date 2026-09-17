@@ -1,6 +1,6 @@
 package com.nhernandez.pacientes.dto;
 
-import com.nhernandez.commons.enums.EstadoRegistro;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record PacienteResponse(
@@ -20,7 +20,7 @@ public record PacienteResponse(
         @Schema(description = "Edad del paciente", example = "29")
         Integer edad,
 
-        @Schema(description = "Peso en kg del paciente", example = "60")
+        @Schema(description = "Peso en kg del paciente", example = "60kg")
         Double peso,
 
         @Schema(description = "Estatura del paciente", example = "1.60")
@@ -39,6 +39,6 @@ public record PacienteResponse(
         String numeroExpediente,
 
         @Schema(description = "Estado (Activo, eliminado) del paciente")
-        EstadoRegistro estado
+        EstadoPaciente estado
 ) {
 }

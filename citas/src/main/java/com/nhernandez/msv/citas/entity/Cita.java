@@ -1,6 +1,6 @@
 package com.nhernandez.msv.citas.entity;
 
-import com.nhernandez.commons.enums.EstadoRegistro;
+import com.nhernandez.commons.enums.EstadoPaciente;
 import com.nhernandez.commons.utils.StringCustomUtils;
 import com.nhernandez.commons.utils.ValoresNumericosUtils;
 import com.nhernandez.commons.enums.EstadoCita;
@@ -49,7 +49,7 @@ public class Cita {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_REGISTRO", nullable = false)
-    private EstadoRegistro estadoRegistro;
+    private EstadoPaciente estadoRegistro;
 
     private static void validarId(Long id, String campo){
         ValoresNumericosUtils.validarLongPositivo(id,
@@ -63,7 +63,7 @@ public class Cita {
     }
 
     private void validarNoEliminada(){
-        if (this.estadoRegistro == EstadoRegistro.ELIMINADO)
+        if (this.estadoRegistro == EstadoPaciente.ELIMINADO)
             throw new IllegalStateException("La cita ya esta eliminada");
     }
 
@@ -79,19 +79,16 @@ public class Cita {
     private void validarEliminacionPermitida(){
         validarNoEliminada();
 
-        if (!estadoCita.isEliminable()) {
+        if (!estadoCita.isEliminable())
             throw new IllegalStateException(
                     "La cita con estado " + estadoCita + " no puede eliminarse");
-        }
     }
 
     private void validarActualizacionPermitida(){
         validarNoEliminada();
 
-        if (!estadoCita.isActualizable()) {
-            throw new IllegalStateException(
-                    "Solo se puede actualizar la cita si está en PENDIENTE o CONFIRMADA");
-        }
+        if (!estadoCita.isActualizable())
+            throw  new IllegalStateException("La cita con estado " + estadoCita + " no puede ser actualizable");
     }
 
 
@@ -108,7 +105,8 @@ public class Cita {
 
     public void eliminar() {
         validarEliminacionPermitida();
-        this.estadoRegistro = EstadoRegistro.ELIMINADO;
+        this.estadoRegistro = EstadoPaciente.ELIMINADO;
+        this.estadoCita = EstadoCita.CANCELADA;
     }
 
     public void actualizarEstado(EstadoCita nuevoEstado) {
@@ -133,7 +131,7 @@ public class Cita {
                 .fechaCita(fechaCita)
                 .sintomas(sintomas.trim())
                 .estadoCita(EstadoCita.PENDIENTE)
-                .estadoRegistro(EstadoRegistro.ACTIVO)
+                .estadoRegistro(EstadoPaciente.ACTIVO)
                 .build();
     }
 }

@@ -39,7 +39,7 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.listarSinValidarEstado());
     }
 
-    @GetMapping("/id-paciente/{id}")
+    @GetMapping("/sinValidarEstado/{id}")
     public ResponseEntity<com.nhernandez.pacientes.dto.PacienteResponse> obtenerSinValidarEstado(@PathVariable Long id) {
         return ResponseEntity.ok(pacienteService.obtenerSinValidarEstado(id));
     }

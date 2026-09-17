@@ -41,7 +41,7 @@ public record PacienteRequest(
         @NotNull(message = "El peso es requerido")
         @DecimalMin(value = "0.1", message = "El peso mínimo es 0.1 kg")
         @DecimalMax(value = "200.0", message = "El peso máximo es 200 kg")
-        @Schema(description = "Peso en kg del paciente", example = "60")
+        @Schema(description = "Peso en kg del paciente", example = "60kg")
         Double peso,
 
         @NotNull(message = "La estatura es requerida")

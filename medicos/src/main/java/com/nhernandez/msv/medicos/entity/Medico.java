@@ -2,7 +2,7 @@ package com.nhernandez.msv.medicos.entity;
 
 import com.nhernandez.commons.enums.DisponibilidadMedico;
 import com.nhernandez.commons.enums.EspecialidadMedico;
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.commons.utils.StringCustomUtils;
 import com.nhernandez.commons.utils.ValoresNumericosUtils;
 import jakarta.persistence.Column;
@@ -61,7 +61,7 @@ public class Medico {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_REGISTRO", nullable = false)
-    private EstadoPaciente estadoRegistro;
+    private EstadoRegistro estadoRegistro;
 
     private void validadDatos(String nombre, String apellidoPaterno, String apellidoMaterno,
                               Short edad, String email, String telefone, String cedulaProfesional,
@@ -78,13 +78,15 @@ public class Medico {
     }
 
     private void validarNoEliminado(){
-        if (this.estadoRegistro == EstadoPaciente.ELIMINADO)
+        if (this.estadoRegistro == EstadoRegistro.ELIMINADO)
             throw  new IllegalArgumentException("El estado no puede ser eliminado");
     }
 
+
+
     public void eliminar(){
         validarNoEliminado();
-        this.estadoRegistro = EstadoPaciente.ELIMINADO;
+        this.estadoRegistro = EstadoRegistro.ELIMINADO;
     }
 
     public void actualizarEspecicialidad(EspecialidadMedico especialidad){

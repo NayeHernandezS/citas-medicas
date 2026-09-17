@@ -1,7 +1,7 @@
 package com.nhernandez.pacientes.service;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 import com.nhernandez.pacientes.entities.Paciente;
 import com.nhernandez.pacientes.mappers.PacienteMapper;
@@ -27,7 +27,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Transactional(readOnly = true)
     public List<PacienteResponse> listar() {
         log.info("Listado de pacientes activos solicitado");
-        return pacienteRepository.findByEstadoNot(EstadoPaciente.ELIMINADO).stream()
+        return pacienteRepository.findByEstadoNot(EstadoRegistro.ELIMINADO).stream()
                 .map(pacienteMapper::entidadResponse)
                 .toList();
     }
@@ -44,7 +44,8 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     @Transactional(readOnly = true)
     public PacienteResponse obtener(Long id) {
-        Paciente paciente = pacienteRepository.findByIdAndEstadoNot(id, EstadoPaciente.ELIMINADO)
+        log.info("Obteniendo paciente");
+        Paciente paciente = pacienteRepository.findByIdAndEstadoNot(id, EstadoRegistro.ELIMINADO)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
         return pacienteMapper.entidadResponse(paciente);
     }
@@ -52,6 +53,7 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     @Transactional(readOnly = true)
     public PacienteResponse obtenerSinValidarEstado(Long id) {
+        log.info("Obteniendo sin validar estado");
         Paciente paciente = pacienteRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
         return pacienteMapper.entidadResponse(paciente);
@@ -66,8 +68,10 @@ public class PacienteServiceImpl implements PacienteService {
         return pacienteMapper.entidadResponse(paciente);
     }
 
+
     @Override
     public PacienteResponse actualizar(Long id, PacienteRequest request) {
+        log.info("Actualizando paciente");
         Paciente paciente = obtenerActivo(id);
         validarTelefonoUnico(request.telefono(), id);
         pacienteMapper.actualizarEntidad(paciente, request);
@@ -76,17 +80,20 @@ public class PacienteServiceImpl implements PacienteService {
 
     @Override
     public PacienteResponse eliminar(Long id) {
+        log.info("Eliminando paciente");
         Paciente paciente = obtenerActivo(id);
-        paciente.setEstado(EstadoPaciente.ELIMINADO);
+        paciente.setEstado(EstadoRegistro.ELIMINADO);
         return pacienteMapper.entidadResponse(pacienteRepository.save(paciente));
     }
 
     private Paciente obtenerActivo(Long id) {
-        return pacienteRepository.findByIdAndEstadoNot(id, EstadoPaciente.ELIMINADO)
+        log.info("Obteniendo paciente ACTIVO");
+        return pacienteRepository.findByIdAndEstadoNot(id, EstadoRegistro.ELIMINADO)
                 .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
     }
 
     private void validarTelefonoUnico(String telefono, Long idActual) {
+        log.info("Validando el telefonp unico");
         boolean telefonoDuplicado = idActual == null
                 ? pacienteRepository.existsByTelefono(telefono)
                 : pacienteRepository.existsByTelefonoAndIdNot(telefono, idActual);

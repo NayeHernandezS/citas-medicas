@@ -1,6 +1,6 @@
 package com.nhernandez.msv.medicos.repository;
 
-import com.nhernandez.commons.enums.EstadoPaciente;
+import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.msv.medicos.entity.Medico;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -9,19 +9,19 @@ import java.util.Optional;
 
 public interface MedicoRepository extends JpaRepository<Medico, Long> {
 
-    List<Medico> findByEstadoRegistro(EstadoPaciente estadoRegistro);
+    List<Medico> findByEstadoRegistro(EstadoRegistro estadoRegistro);
 
-    Optional<Medico> findByIdAndEstadoRegistro(Long id, EstadoPaciente estadoRegistro);
+    Optional<Medico> findByIdAndEstadoRegistro(Long id, EstadoRegistro estadoRegistro);
 
-    boolean existsByEmailIgnoreCaseAndEstadoRegistro(String email, EstadoPaciente estadoRegistro);
+    boolean existsByEmailIgnoreCaseAndEstadoRegistro(String email, EstadoRegistro estadoRegistro);
 
-    boolean existsByTelefonoAndEstadoRegistro(String telefono, EstadoPaciente estadoRegistro);
+    boolean existsByTelefonoAndEstadoRegistro(String telefono, EstadoRegistro estadoRegistro);
 
-    boolean existsByCedulaProfesionalIgnoreCaseAndEstadoRegistro(String cedula, EstadoPaciente estadoRegistro);
+    boolean existsByCedulaProfesionalIgnoreCaseAndEstadoRegistro(String cedula, EstadoRegistro estadoRegistro);
 
-    boolean existsByEmailIgnoreCaseAndEstadoRegistroAndIdNot(String email, EstadoPaciente estadoRegistro, Long id);
+    boolean existsByEmailIgnoreCaseAndEstadoRegistroAndIdNot(String email, EstadoRegistro estadoRegistro, Long id);
 
-    boolean existsByTelefonoAndEstadoRegistroAndIdNot(String telefono, EstadoPaciente estadoRegistro, Long id);
+    boolean existsByTelefonoAndEstadoRegistroAndIdNot(String telefono, EstadoRegistro estadoRegistro, Long id);
 
-    boolean existsByCedulaProfesionalIgnoreCaseAndEstadoRegistroAndIdNot(String cedula, EstadoPaciente estadoRegistro, Long id);
+    boolean existsByCedulaProfesionalIgnoreCaseAndEstadoRegistroAndIdNot(String cedula, EstadoRegistro estadoRegistro, Long id);
 }

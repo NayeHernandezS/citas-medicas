@@ -42,4 +42,20 @@ public class CitaController extends CrudController<CitaRequest, CitaResponse, Ci
     ) {
         return ResponseEntity.ok(service.medicoTieneCitasConfirmadaOEnCurso(idMedico));
     }
+
+    @GetMapping("/medico/{idMedico}/citas-activas")
+    @Operation(summary = "Indica si el médico tiene citas PENDIENTE, CONFIRMADA o EN_CURSO")
+    public ResponseEntity<Boolean> medicoTieneCitasActivas(
+            @PathVariable @Positive(message = "El id del médico debe ser positivo") Long idMedico
+    ) {
+        return ResponseEntity.ok(service.medicoTieneCitasActivas(idMedico));
+    }
+
+    @GetMapping("/paciente/{idPaciente}/citas-confirmada-en-curso")
+    @Operation(summary = "Indica si el paciente tiene citas CONFIRMADA o EN_CURSO")
+    public ResponseEntity<Boolean> pacienteTieneCitasConfirmadaOEnCurso(
+            @PathVariable @Positive(message = "El id del paciente debe ser positivo") Long idPaciente
+    ) {
+        return ResponseEntity.ok(service.pacienteTieneCitasConfirmadaOEnCurso(idPaciente));
+    }
 }

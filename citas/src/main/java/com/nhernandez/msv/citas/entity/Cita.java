@@ -79,7 +79,7 @@ public class Cita {
     private void validarEliminacionPermitida(){
         validarNoEliminada();
 
-        if (estadoCita != EstadoCita.PENDIENTE && estadoCita != EstadoCita.CONFIRMADA) {
+        if (!estadoCita.isEliminable()) {
             throw new IllegalStateException(
                     "La cita con estado " + estadoCita + " no puede eliminarse");
         }
@@ -88,7 +88,7 @@ public class Cita {
     private void validarActualizacionPermitida(){
         validarNoEliminada();
 
-        if (estadoCita != EstadoCita.PENDIENTE && estadoCita != EstadoCita.CONFIRMADA) {
+        if (!estadoCita.isActualizable()) {
             throw new IllegalStateException(
                     "Solo se puede actualizar la cita si está en PENDIENTE o CONFIRMADA");
         }

@@ -91,8 +91,28 @@ public class MedicoServiceImpl implements MedicoService {
     public void actualizarDisponibilidadMedico(Long idMedico, Long idDisponibilidad) {
         log.info("Actualizando disponibilidad del médico {} a {}", idMedico, idDisponibilidad);
         Medico medico = obtenerActivo(idMedico);
-        medico.actualizarDisponibilidad(DisponibilidadMedico.findByCodigo(idDisponibilidad));
+        DisponibilidadMedico nuevaDisponibilidad = DisponibilidadMedico.findByCodigo(idDisponibilidad);
+        validarCambioDisponibilidad(idMedico, nuevaDisponibilidad);
+        medico.actualizarDisponibilidad(nuevaDisponibilidad);
         medicoRepository.save(medico);
+    }
+
+    private void validarCambioDisponibilidad(Long idMedico, DisponibilidadMedico nuevaDisponibilidad) {
+        if (!Boolean.TRUE.equals(citasClient.medicoTieneCitasActivas(idMedico))) {
+            return;
+        }
+
+        if (nuevaDisponibilidad == DisponibilidadMedico.NO_DISPONIBLE
+                || nuevaDisponibilidad == DisponibilidadMedico.EN_CONSULTA) {
+            return;
+        }
+
+        if (nuevaDisponibilidad == DisponibilidadMedico.DISPONIBLE) {
+            throw new IllegalStateException(
+                    "No se puede cambiar manualmente la disponibilidad a DISPONIBLE si el médico tiene citas activas");
+        }
+        throw new IllegalStateException(
+                "El cambio manual de disponibilidad no está permitido si el médico tiene citas activas");
     }
 
     private void validarSinCitasConfirmadaOEnCurso(Long idMedico) {

@@ -9,4 +9,10 @@ public interface CitasClient {
 
     @GetMapping("/medico/{idMedico}/citas-confirmada-en-curso")
     Boolean medicoTieneCitasConfirmadaOEnCurso(@PathVariable("idMedico") Long idMedico);
+
+    @GetMapping("/medico/{idMedico}/citas-activas")
+    Boolean medicoTieneCitasActivas(@PathVariable("idMedico") Long idMedico);
+
+    @GetMapping("/paciente/{idPaciente}/citas-confirmada-en-curso")
+    Boolean pacienteTieneCitasConfirmadaOEnCurso(@PathVariable("idPaciente") Long idPaciente);
 }

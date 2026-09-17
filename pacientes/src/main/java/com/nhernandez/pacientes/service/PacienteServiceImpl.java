@@ -1,5 +1,6 @@
 package com.nhernandez.pacientes.service;
 
+import com.nhernandez.commons.client.CitasClient;
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
 import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.pacientes.dto.PacienteResponse;
@@ -22,6 +23,7 @@ public class PacienteServiceImpl implements PacienteService {
 
     private final PacienteRepository pacienteRepository;
     private final PacienteMapper pacienteMapper;
+    private final CitasClient citasClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +76,7 @@ public class PacienteServiceImpl implements PacienteService {
     public PacienteResponse actualizar(Long id, PacienteRequest request) {
         log.info("Actualizando paciente");
         Paciente paciente = obtenerActivo(id);
+        validarSinCitasConfirmadaOEnCurso(id);
         validarTelefonoUnico(request.telefono(), id);
         validarEmailUnico(request.email(), id);
         pacienteMapper.actualizarEntidad(paciente, request);
@@ -84,8 +87,17 @@ public class PacienteServiceImpl implements PacienteService {
     public PacienteResponse eliminar(Long id) {
         log.info("Eliminando paciente");
         Paciente paciente = obtenerActivo(id);
+        validarSinCitasConfirmadaOEnCurso(id);
         paciente.setEstado(EstadoRegistro.ELIMINADO);
         return pacienteMapper.entidadResponse(pacienteRepository.save(paciente));
+    }
+
+    private void validarSinCitasConfirmadaOEnCurso(Long idPaciente) {
+        log.info("Validando citas CONFIRMADA o EN_CURSO del paciente {}", idPaciente);
+        if (Boolean.TRUE.equals(citasClient.pacienteTieneCitasConfirmadaOEnCurso(idPaciente))) {
+            throw new IllegalStateException(
+                    "No se puede actualizar o eliminar lógicamente un paciente si tiene citas CONFIRMADA o EN_CURSO");
+        }
     }
 
     private Paciente obtenerActivo(Long id) {

@@ -91,10 +91,9 @@ public class CitaServiceImpl implements CitaService {
 
         PacienteResponse paciente = obtenerPacienteActivo(request.idPaciente());
         validarPacienteSinCitaActiva(request.idPaciente(), id);
-        MedicoResponse medico = obtenerMedicoActivo(request.idMedico());
-        if (cambiaMedico && !DisponibilidadMedico.DISPONIBLE.getCodigo().equals(medico.idDisponibilidad())) {
-            throw new IllegalStateException("El médico " + request.idMedico() + " no está disponible para agendar citas");
-        }
+        MedicoResponse medico = cambiaMedico
+                ? validarMedicoActivoDisponible(request.idMedico())
+                : obtenerMedicoActivo(request.idMedico());
 
         cita.actualizar(request.idPaciente(), request.idMedico(), request.fechaCita(), request.sintomas());
         citaRepository.save(cita);

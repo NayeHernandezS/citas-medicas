@@ -90,11 +90,18 @@ public class MedicoServiceImpl implements MedicoService {
     public void actualizarDisponibilidadMedico(Long idMedico, Long idDisponibilidad) {
         log.info("Actualizando disponibilidad del médico {} a {}", idMedico, idDisponibilidad);
         Medico medico = obtenerActivo(idMedico);
-        medico.actualizarDisponibilidad(DisponibilidadMedico.findByCodigo(idDisponibilidad));
+        DisponibilidadMedico disponibilidad = DisponibilidadMedico.findByCodigo(idDisponibilidad);
+        if (disponibilidad == DisponibilidadMedico.DISPONIBLE
+                && Boolean.TRUE.equals(citasClient.medicoTieneCitasActivas(idMedico))) {
+            throw new IllegalStateException(
+                    "No se puede pasar al médico a DISPONIBLE si tiene citas activas (PENDIENTE, CONFIRMADA o EN_CURSO)");
+        }
+        medico.actualizarDisponibilidad(disponibilidad);
         medicoRepository.save(medico);
     }
 
     private void validarSinCitasConfirmadaOEnCurso(Long idMedico) {
+        // No actualizar ni eliminar lógicamente si tiene citas CONFIRMADA o EN_CURSO
         if (Boolean.TRUE.equals(citasClient.medicoTieneCitasConfirmadaOEnCurso(idMedico))) {
             throw new IllegalStateException(
                     "No se puede actualizar o eliminar lógicamente un médico si tiene citas CONFIRMADA o EN_CURSO");

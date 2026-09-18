@@ -1,23 +1,14 @@
 package com.nhernandez.pacientes.service;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
+import com.nhernandez.commons.services.CrudService;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 
 import java.util.List;
 
-public interface PacienteService {
-
-    List<PacienteResponse> listar();
+public interface PacienteService extends CrudService<PacienteRequest, PacienteResponse> {
 
     List<PacienteResponse> listarSinValidarEstado();
 
-    PacienteResponse obtener(Long id);
-
     PacienteResponse obtenerSinValidarEstado(Long id);
-
-    PacienteResponse registrar(PacienteRequest request);
-
-    PacienteResponse actualizar(Long id, PacienteRequest request);
-
-    PacienteResponse eliminar(Long id);
 }

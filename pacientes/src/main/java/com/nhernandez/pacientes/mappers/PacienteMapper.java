@@ -1,10 +1,8 @@
 package com.nhernandez.pacientes.mappers;
 
 import com.nhernandez.commons.dto.pacientes.PacienteRequest;
-import com.nhernandez.commons.enums.EstadoRegistro;
 import com.nhernandez.pacientes.dto.PacienteResponse;
 import com.nhernandez.pacientes.entities.Paciente;
-import com.nhernandez.pacientes.util.PacienteReglas;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,28 +33,30 @@ public class PacienteMapper {
         if (request == null) {
             return null;
         }
-        Paciente paciente = new Paciente();
-        aplicarDatos(paciente, request);
-        paciente.setEstado(EstadoRegistro.ACTIVO);
-        return paciente;
+        return Paciente.crear(
+                request.nombre(),
+                request.apellidoPaterno(),
+                request.apellidoMaterno(),
+                request.direccion(),
+                request.edad(),
+                request.peso(),
+                request.estatura(),
+                request.telefono(),
+                request.email()
+        );
     }
 
     public void actualizarEntidad(Paciente paciente, PacienteRequest request) {
-        aplicarDatos(paciente, request);
-    }
-
-    private void aplicarDatos(Paciente paciente, PacienteRequest request) {
-        paciente.setNombre(request.nombre().trim());
-        paciente.setApellidoPaterno(request.apellidoPaterno().trim());
-        paciente.setApellidoMaterno(request.apellidoMaterno().trim());
-        paciente.setDireccion(request.direccion().trim());
-        paciente.setEdad(request.edad());
-        paciente.setPeso(request.peso());
-        paciente.setEstatura(request.estatura());
-        paciente.setTelefono(request.telefono().trim());
-        paciente.setEmail(request.email().trim());
-        paciente.setImc(PacienteReglas.calcularImc(request.peso(), request.estatura()));
-        paciente.setNumeroExpediente(PacienteReglas.generarNumeroExpediente(request.telefono().trim()));
-
+        paciente.actualizar(
+                request.nombre(),
+                request.apellidoPaterno(),
+                request.apellidoMaterno(),
+                request.direccion(),
+                request.edad(),
+                request.peso(),
+                request.estatura(),
+                request.telefono(),
+                request.email()
+        );
     }
 }

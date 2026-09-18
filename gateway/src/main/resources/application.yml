@@ -33,6 +33,7 @@ spring:
               predicates:
                 - Path=/api/pacientes/**
               filters:
+                # Quita /api/pacientes para que llegue a GET / del microservicio
                 - StripPrefix=2
 
 eureka:

@@ -62,6 +62,7 @@ public enum EstadoCita {
         return puedeCambiar().contains(nuevoEstado);
     }
 
+    /** Única tabla: estado de la cita → disponibilidad del médico. */
     public Long codigoDisponibilidadMedico() {
         return switch (this) {
             case PENDIENTE, CONFIRMADA -> DisponibilidadMedico.NO_DISPONIBLE.getCodigo();

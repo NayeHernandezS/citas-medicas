@@ -10,4 +10,7 @@ public interface PacientesClient {
 
     @GetMapping("/{id}")
     PacienteResponse obtenerPacienteActivoPorId(@PathVariable("id") Long id);
+
+    @GetMapping("/sinValidarEstado/{id}")
+    PacienteResponse obtenerPacienteSinEstadoPorId(@PathVariable("id") Long id);
 }

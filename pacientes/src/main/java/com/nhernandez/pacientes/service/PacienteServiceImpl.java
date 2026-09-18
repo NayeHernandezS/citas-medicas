@@ -45,10 +45,8 @@ public class PacienteServiceImpl implements PacienteService {
 
     @Override
     @Transactional(readOnly = true)
-    public PacienteResponse obtener(Long id) {
-        Paciente paciente = pacienteRepository.findByIdAndEstadoNot(id, EstadoRegistro.ELIMINADO)
-                .orElseThrow(() -> new NoSuchElementException("No se encontro el paciente: " + id));
-        return pacienteMapper.entidadResponse(paciente);
+    public PacienteResponse obtenerPorId(Long id) {
+        return pacienteMapper.entidadResponse(obtenerActivo(id));
     }
 
     @Override
@@ -62,29 +60,27 @@ public class PacienteServiceImpl implements PacienteService {
     @Override
     public PacienteResponse registrar(PacienteRequest request) {
         log.info("Registrando paciente con telefono {}", request.telefono());
-        validarTelefonoUnico(request.telefono(), null);
-        validarEmailUnico(request.email(), null);
+        validarDatosUnicos(request, null);
         Paciente paciente = pacienteMapper.requestToEntity(request);
         paciente = pacienteRepository.save(paciente);
         return pacienteMapper.entidadResponse(paciente);
     }
 
     @Override
-    public PacienteResponse actualizar(Long id, PacienteRequest request) {
+    public PacienteResponse actualizar(PacienteRequest request, Long id) {
         Paciente paciente = obtenerActivo(id);
         validarSinCitasConfirmadaOEnCurso(id);
-        validarTelefonoUnico(request.telefono(), id);
-        validarEmailUnico(request.email(), id);
+        validarDatosUnicos(request, id);
         pacienteMapper.actualizarEntidad(paciente, request);
         return pacienteMapper.entidadResponse(pacienteRepository.save(paciente));
     }
 
     @Override
-    public PacienteResponse eliminar(Long id) {
+    public void eliminar(Long id) {
         Paciente paciente = obtenerActivo(id);
         validarSinCitasConfirmadaOEnCurso(id);
-        paciente.setEstado(EstadoRegistro.ELIMINADO);
-        return pacienteMapper.entidadResponse(pacienteRepository.save(paciente));
+        paciente.eliminar();
+        pacienteRepository.save(paciente);
     }
 
     private Paciente obtenerActivo(Long id) {
@@ -99,21 +95,19 @@ public class PacienteServiceImpl implements PacienteService {
         }
     }
 
-    private void validarTelefonoUnico(String telefono, Long idActual) {
+    private void validarDatosUnicos(PacienteRequest request, Long idActual) {
         boolean telefonoDuplicado = idActual == null
-                ? pacienteRepository.existsByTelefono(telefono)
-                : pacienteRepository.existsByTelefonoAndIdNot(telefono, idActual);
+                ? pacienteRepository.existsByTelefono(request.telefono())
+                : pacienteRepository.existsByTelefonoAndIdNot(request.telefono(), idActual);
         if (telefonoDuplicado) {
-            throw new IllegalArgumentException("Ya existe un paciente registrado con el telefono " + telefono);
+            throw new IllegalArgumentException("Ya existe un paciente registrado con el telefono " + request.telefono());
         }
-    }
 
-    private void validarEmailUnico(String email, Long idActual) {
         boolean emailDuplicado = idActual == null
-                ? pacienteRepository.existsByEmailIgnoreCase(email)
-                : pacienteRepository.existsByEmailIgnoreCaseAndIdNot(email, idActual);
+                ? pacienteRepository.existsByEmailIgnoreCase(request.email())
+                : pacienteRepository.existsByEmailIgnoreCaseAndIdNot(request.email(), idActual);
         if (emailDuplicado) {
-            throw new IllegalArgumentException("Ya existe un paciente registrado con el correo " + email);
+            throw new IllegalArgumentException("Ya existe un paciente registrado con el correo " + request.email());
         }
     }
 }

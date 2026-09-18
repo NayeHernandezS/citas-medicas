@@ -30,6 +30,7 @@ public class MedicoController extends CrudController<MedicoRequest, MedicoRespon
         return ResponseEntity.ok(service.obtenerMedicoPorIdSinEstado(id));
     }
 
+    /** Códigos: 1 DISPONIBLE, 2 EN_CONSULTA, 5 NO_DISPONIBLE. */
     @PutMapping("/{idMedico}/disponibilidad/{idDisponibilidad}")
     @Operation(summary = "Actualizar disponibilidad del médico")
     public ResponseEntity<Void> actualizarDisponibilidadMedico(

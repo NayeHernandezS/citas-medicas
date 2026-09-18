@@ -12,14 +12,14 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "PACIENTES")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 public class Paciente {
 
     @Id
@@ -64,4 +64,92 @@ public class Paciente {
     @Column(name = "ESTADO_REGISTRO", nullable = false, length = 20)
     private EstadoRegistro estado;
 
+    public static Paciente crear(
+            String nombre,
+            String apellidoPaterno,
+            String apellidoMaterno,
+            String direccion,
+            Integer edad,
+            Double peso,
+            Double estatura,
+            String telefono,
+            String email
+    ) {
+        Paciente paciente = new Paciente();
+        paciente.aplicarDatos(
+                nombre, apellidoPaterno, apellidoMaterno, direccion, edad, peso, estatura, telefono, email);
+        paciente.estado = EstadoRegistro.ACTIVO;
+        return paciente;
+    }
+
+    public void actualizar(
+            String nombre,
+            String apellidoPaterno,
+            String apellidoMaterno,
+            String direccion,
+            Integer edad,
+            Double peso,
+            Double estatura,
+            String telefono,
+            String email
+    ) {
+        validarNoEliminado();
+        aplicarDatos(
+                nombre, apellidoPaterno, apellidoMaterno, direccion, edad, peso, estatura, telefono, email);
+    }
+
+    public void eliminar() {
+        validarNoEliminado();
+        this.estado = EstadoRegistro.ELIMINADO;
+    }
+
+    private void validarNoEliminado() {
+        if (this.estado == EstadoRegistro.ELIMINADO) {
+            throw new IllegalStateException("El paciente ya esta eliminado");
+        }
+    }
+
+    private void aplicarDatos(
+            String nombre,
+            String apellidoPaterno,
+            String apellidoMaterno,
+            String direccion,
+            Integer edad,
+            Double peso,
+            Double estatura,
+            String telefono,
+            String email
+    ) {
+        this.nombre = nombre.trim();
+        this.apellidoPaterno = apellidoPaterno.trim();
+        this.apellidoMaterno = apellidoMaterno.trim();
+        this.direccion = direccion.trim();
+        this.edad = edad;
+        this.peso = peso;
+        this.estatura = estatura;
+        this.telefono = telefono.trim();
+        this.email = email.trim();
+        this.imc = calcularImc(peso, estatura);
+        this.numeroExpediente = generarNumeroExpediente(this.telefono);
+    }
+
+    private static double calcularImc(double peso, double estatura) {
+        if (estatura <= 0) {
+            throw new IllegalArgumentException("La estatura debe ser mayor a 0 para calcular el IMC");
+        }
+        double imc = Math.round((peso / (estatura * estatura)) * 100.0) / 100.0;
+        if (imc < 10.0 || imc > 50.0) {
+            throw new IllegalArgumentException("El IMC calculado (" + imc + ") debe estar entre 10.0 y 50.0");
+        }
+        return imc;
+    }
+
+    private static String generarNumeroExpediente(String telefono) {
+        if (telefono == null || !telefono.matches("\\d{10}")) {
+            throw new IllegalArgumentException("El teléfono debe tener exactamente 10 dígitos numéricos");
+        }
+        return telefono.chars()
+                .mapToObj(c -> String.valueOf((char) c))
+                .collect(Collectors.joining("X"));
+    }
 }

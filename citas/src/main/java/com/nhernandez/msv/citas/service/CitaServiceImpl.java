@@ -18,13 +18,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class CitaServiceImpl implements CitaService {
@@ -103,7 +100,10 @@ public class CitaServiceImpl implements CitaService {
 
         if (cambiaMedico) {
             cambiarDisponibilidadMedicoSegunEstadoCita(medico.id(), cita.getEstadoCita());
-            liberarMedicoSiQuedaSinCitasActivas(medicoAnterior);
+            if (!medicoTieneCitasActivas(medicoAnterior)) {
+                actualizarDisponibilidadMedico(
+                        medicoAnterior, DisponibilidadMedico.DISPONIBLE.getCodigo());
+            }
         }
         return citaMapper.entidadResponse(cita, paciente, medico);
     }
@@ -175,39 +175,16 @@ public class CitaServiceImpl implements CitaService {
 
     /** Ocupa o libera al médico según EstadoCita.codigoDisponibilidadMedico(). */
     private void cambiarDisponibilidadMedicoSegunEstadoCita(Long idMedico, EstadoCita estadoCita) {
-        Long codigo = estadoCita.codigoDisponibilidadMedico();
-        Runnable aplicar = () -> medicoClient.actualizarDisponibilidadMedico(idMedico, codigo);
-        if (DisponibilidadMedico.DISPONIBLE.getCodigo().equals(codigo)
-                && TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    aplicar.run();
-                }
-            });
-            return;
-        }
-        aplicar.run();
+        actualizarDisponibilidadMedico(idMedico, estadoCita.codigoDisponibilidadMedico());
     }
 
-    /** Libera al médico anterior a DISPONIBLE; no usa el mapeo de estado de cita. */
-    private void liberarMedicoSiQuedaSinCitasActivas(Long idMedico) {
-        Runnable liberar = () -> {
-            if (!medicoTieneCitasActivas(idMedico)) {
-                medicoClient.actualizarDisponibilidadMedico(
-                        idMedico, DisponibilidadMedico.DISPONIBLE.getCodigo());
-            }
-        };
-        if (TransactionSynchronizationManager.isSynchronizationActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    liberar.run();
-                }
-            });
-            return;
+    private void actualizarDisponibilidadMedico(Long idMedico, Long idDisponibilidad) {
+        try {
+            medicoClient.actualizarDisponibilidadMedico(idMedico, idDisponibilidad);
+        } catch (FeignException.Conflict e) {
+            throw new IllegalStateException(
+                    "No se pudo actualizar la disponibilidad del médico " + idMedico);
         }
-        liberar.run();
     }
 
     @Override

@@ -40,9 +40,6 @@ public class MedicoMapper implements CommonMapper<MedicoRequest, MedicoResponse,
             return null;
         }
 
-        EspecialidadMedico especialidad = entidad.getEspecialidadMedico();
-        DisponibilidadMedico disponibilidad = entidad.getDisponibilidadMedico();
-
         return new MedicoResponse(
                 entidad.getId(),
                 entidad.getNombre(),
@@ -50,9 +47,9 @@ public class MedicoMapper implements CommonMapper<MedicoRequest, MedicoResponse,
                 entidad.getEmail(),
                 entidad.getTelefono(),
                 entidad.getCedulaProfesional(),
-                especialidad != null ? especialidad.getDescripcion() : null,
-                disponibilidad != null ? disponibilidad.getDescripcion() : null,
-                disponibilidad != null ? disponibilidad.getCodigo() : null
+                entidad.getEspecialidadMedico().getDescripcion(),
+                entidad.getDisponibilidadMedico().getDescripcion(),
+                entidad.getDisponibilidadMedico().getCodigo()
         );
     }
 }

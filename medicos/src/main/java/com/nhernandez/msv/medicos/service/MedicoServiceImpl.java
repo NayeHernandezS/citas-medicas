@@ -91,10 +91,11 @@ public class MedicoServiceImpl implements MedicoService {
         log.info("Actualizando disponibilidad del médico {} a {}", idMedico, idDisponibilidad);
         Medico medico = obtenerActivo(idMedico);
         DisponibilidadMedico disponibilidad = DisponibilidadMedico.findByCodigo(idDisponibilidad);
-        if (disponibilidad == DisponibilidadMedico.DISPONIBLE
-                && Boolean.TRUE.equals(citasClient.medicoTieneCitasActivas(idMedico))) {
-            throw new IllegalStateException(
-                    "No se puede pasar al médico a DISPONIBLE si tiene citas activas (PENDIENTE, CONFIRMADA o EN_CURSO)");
+        if (disponibilidad == DisponibilidadMedico.DISPONIBLE) {
+            if (Boolean.TRUE.equals(citasClient.medicoTieneCitasActivas(idMedico))) {
+                throw new IllegalStateException(
+                        "No se puede pasar al médico a DISPONIBLE si tiene citas activas (PENDIENTE, CONFIRMADA o EN_CURSO)");
+            }
         }
         medico.actualizarDisponibilidad(disponibilidad);
         medicoRepository.save(medico);

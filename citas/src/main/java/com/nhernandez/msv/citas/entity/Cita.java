@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "CITAS")
@@ -50,6 +51,12 @@ public class Cita {
     @Enumerated(EnumType.STRING)
     @Column(name = "ESTADO_REGISTRO", nullable = false)
     private EstadoRegistro estadoRegistro;
+
+    public static final List<EstadoCita> ESTADOS_ACTIVOS = List.of(
+            EstadoCita.PENDIENTE, EstadoCita.CONFIRMADA, EstadoCita.EN_CURSO);
+
+    public static final List<EstadoCita> ESTADOS_CONFIRMADA_EN_CURSO = List.of(
+            EstadoCita.CONFIRMADA, EstadoCita.EN_CURSO);
 
     private static void validarId(Long id, String campo){
         ValoresNumericosUtils.validarLongPositivo(id,

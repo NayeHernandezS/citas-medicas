@@ -1,0 +1,420 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-pacientesmedicos",
+    "name": "pacientes-medicos",
+    "description": "Endpoints para probar el sistema de citas médicas.\n\n**Servicios directos**\n- Pacientes: http://localhost:8081\n- Médicos: http://localhost:8082\n- Citas: http://localhost:8083\n- Gateway: http://localhost:8090\n\n**Catálogos**\nEstadoCita: 1 PENDIENTE, 2 CONFIRMADA, 3 EN_CURSO, 4 FINALIZADA, 5 CANCELADA\nDisponibilidad: 1 DISPONIBLE, 2 EN_CONSULTA, 5 NO_DISPONIBLE\nEspecialidad: 1 Medicina General",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "idPaciente", "value": "1" },
+    { "key": "idMedico", "value": "1" },
+    { "key": "idCita", "value": "1" },
+    { "key": "idEstadoCita", "value": "2" },
+    { "key": "idDisponibilidad", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Pacientes",
+      "item": [
+        {
+          "name": "Listar activos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Obtener por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/{{idPaciente}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["{{idPaciente}}"]
+            }
+          }
+        },
+        {
+          "name": "Listar sin validar estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/sinValidarEstado",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["sinValidarEstado"]
+            }
+          }
+        },
+        {
+          "name": "Obtener sin validar estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/sinValidarEstado/{{idPaciente}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["sinValidarEstado", "{{idPaciente}}"]
+            }
+          }
+        },
+        {
+          "name": "Registrar",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nayely\",\n  \"apellidoPaterno\": \"Hernandez\",\n  \"apellidoMaterno\": \"Silva\",\n  \"direccion\": \"Morelos calle Ocampo N-8\",\n  \"edad\": 29,\n  \"peso\": 60.5,\n  \"estatura\": 1.60,\n  \"telefono\": \"7352713050\",\n  \"email\": \"naye20_97@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nayely\",\n  \"apellidoPaterno\": \"Hernandez\",\n  \"apellidoMaterno\": \"Silva\",\n  \"direccion\": \"Morelos calle Ocampo N-8\",\n  \"edad\": 29,\n  \"peso\": 60.5,\n  \"estatura\": 1.60,\n  \"telefono\": \"7352713050\",\n  \"email\": \"naye20_97@gmail.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8081/{{idPaciente}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["{{idPaciente}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8081/{{idPaciente}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8081",
+              "path": ["{{idPaciente}}"]
+            }
+          }
+        },
+        {
+          "name": "Gateway - Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/pacientes",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8090",
+              "path": ["api", "pacientes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Medicos",
+      "item": [
+        {
+          "name": "Listar activos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Obtener por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/{{idMedico}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["{{idMedico}}"]
+            }
+          }
+        },
+        {
+          "name": "Obtener sin validar estado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/id-medico/{{idMedico}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["id-medico", "{{idMedico}}"]
+            }
+          }
+        },
+        {
+          "name": "Registrar",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"edad\": 35,\n  \"email\": \"juan.perez@hospital.com\",\n  \"telefono\": \"7352713050\",\n  \"cedulaProfesional\": \"123456789012\",\n  \"idEspecialidad\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"edad\": 35,\n  \"email\": \"juan.perez@hospital.com\",\n  \"telefono\": \"7352713050\",\n  \"cedulaProfesional\": \"123456789012\",\n  \"idEspecialidad\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8082/{{idMedico}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["{{idMedico}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/{{idMedico}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["{{idMedico}}"]
+            }
+          }
+        },
+        {
+          "name": "Actualizar disponibilidad",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/{{idMedico}}/disponibilidad/{{idDisponibilidad}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8082",
+              "path": ["{{idMedico}}", "disponibilidad", "{{idDisponibilidad}}"]
+            }
+          }
+        },
+        {
+          "name": "Gateway - Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/medicos",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8090",
+              "path": ["api", "medicos"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Citas",
+      "item": [
+        {
+          "name": "Listar activas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Obtener por id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/{{idCita}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["{{idCita}}"]
+            }
+          }
+        },
+        {
+          "name": "Registrar",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idPaciente\": 1,\n  \"idMedico\": 42,\n  \"fechaCita\": \"30/09/2026 10:00\",\n  \"sintomas\": \"Dolor de cabeza persistente desde hace tres días\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8083/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idPaciente\": 1,\n  \"idMedico\": 42,\n  \"fechaCita\": \"30/09/2026 11:00\",\n  \"sintomas\": \"Dolor de cabeza persistente actualizado en la cita\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8083/{{idCita}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["{{idCita}}"]
+            }
+          }
+        },
+        {
+          "name": "Cambiar estado",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/{{idCita}}/estado/{{idEstadoCita}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["{{idCita}}", "estado", "{{idEstadoCita}}"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/{{idCita}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["{{idCita}}"]
+            }
+          }
+        },
+        {
+          "name": "Medico tiene CONFIRMADA o EN_CURSO",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/medico/{{idMedico}}/citas-confirmada-en-curso",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["medico", "{{idMedico}}", "citas-confirmada-en-curso"]
+            }
+          }
+        },
+        {
+          "name": "Medico tiene citas activas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/medico/{{idMedico}}/citas-activas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["medico", "{{idMedico}}", "citas-activas"]
+            }
+          }
+        },
+        {
+          "name": "Paciente tiene CONFIRMADA o EN_CURSO",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8083/paciente/{{idPaciente}}/citas-confirmada-en-curso",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8083",
+              "path": ["paciente", "{{idPaciente}}", "citas-confirmada-en-curso"]
+            }
+          }
+        },
+        {
+          "name": "Gateway - Listar",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8090/api/citas",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8090",
+              "path": ["api", "citas"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

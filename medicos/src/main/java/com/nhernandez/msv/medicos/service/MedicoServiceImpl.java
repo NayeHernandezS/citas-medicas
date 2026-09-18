@@ -1,5 +1,6 @@
 package com.nhernandez.msv.medicos.service;
 
+import com.nhernandez.commons.client.CitasClient;
 import com.nhernandez.commons.dto.medicos.MedicoRequest;
 import com.nhernandez.commons.dto.medicos.MedicoResponse;
 import com.nhernandez.commons.enums.DisponibilidadMedico;
@@ -24,6 +25,7 @@ public class MedicoServiceImpl implements MedicoService {
 
     private final MedicoRepository medicoRepository;
     private final MedicoMapper medicoMapper;
+    private final CitasClient citasClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,6 +62,7 @@ public class MedicoServiceImpl implements MedicoService {
     public MedicoResponse actualizar(MedicoRequest request, Long id) {
         log.info("Actualizando medico {}", id);
         Medico medico = obtenerActivo(id);
+        validarSinCitasConfirmadaOEnCurso(id);
         validarDatosUnicos(request, id);
         medico.actualizar(
                 request.nombre(),
@@ -78,6 +81,7 @@ public class MedicoServiceImpl implements MedicoService {
     public void eliminar(Long id) {
         log.info("Eliminando médico {}", id);
         Medico medico = obtenerActivo(id);
+        validarSinCitasConfirmadaOEnCurso(id);
         medico.eliminar();
         medicoRepository.save(medico);
     }
@@ -88,6 +92,13 @@ public class MedicoServiceImpl implements MedicoService {
         Medico medico = obtenerActivo(idMedico);
         medico.actualizarDisponibilidad(DisponibilidadMedico.findByCodigo(idDisponibilidad));
         medicoRepository.save(medico);
+    }
+
+    private void validarSinCitasConfirmadaOEnCurso(Long idMedico) {
+        if (Boolean.TRUE.equals(citasClient.medicoTieneCitasConfirmadaOEnCurso(idMedico))) {
+            throw new IllegalStateException(
+                    "No se puede actualizar o eliminar lógicamente un médico si tiene citas CONFIRMADA o EN_CURSO");
+        }
     }
 
     private Medico obtenerActivo(Long id) {

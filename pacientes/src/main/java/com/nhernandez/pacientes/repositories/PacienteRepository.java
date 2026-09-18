@@ -11,10 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
 
-    //LA FUNCION DEL REPOSITORY ES COMUNICARSE CON LA BASE DE DATOS.
-    //SABE COMO HACER EL SELECT* FROM  paciente WHERE estado !=.
-    //PERO NO SABE NADA DE LOGICA DE NEGOCIO NI DE LO QUE EL USURIO FINAL NECESITA VER
-
+    
     List<Paciente> findByEstadoNot(EstadoRegistro estado);
 
     Optional<Paciente> findByIdAndEstadoNot(Long id, EstadoRegistro estado);
@@ -22,5 +19,9 @@ public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     boolean existsByTelefono(String telefono);
 
     boolean existsByTelefonoAndIdNot(String telefono, Long id);
+
+    boolean existsByEmailIgnoreCase(String email);
+
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
 
 }
